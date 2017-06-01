@@ -153,6 +153,7 @@
   -->
   <ItemGroup>
     <Compile Include="Comun\Constants.cs" />
+    <Compile Include="Comun\LocalWindowsHook.cs" />
     <Compile Include="Comun\Utils.cs" />
     <Compile Include="Controles\ColorPicker.cs">
       <SubType>Component</SubType>

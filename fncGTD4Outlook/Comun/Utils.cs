@@ -390,5 +390,56 @@ namespace fncGTD4Outlook.Comun
             }
             return source.Substring(0, index);
         }
+
+        public static void MostrarDelegarForm()
+        {
+            // get active Window
+            object activeWindow = Globals.ThisAddIn.Application.ActiveWindow();
+            Outlook.Inspector inspector = null;
+            Outlook.MailItem currentMail = null;
+            try
+            {
+                if (activeWindow is Outlook.Explorer)
+                {
+                    frmDelegar f = new frmDelegar();
+                    f.ShowDialog();
+                    f.Dispose();
+                    f = null;
+                }
+                if (activeWindow is Outlook.Inspector)
+                {
+                    // its an inspector window
+                    inspector = Globals.ThisAddIn.Application.ActiveInspector();
+                    currentMail = inspector.CurrentItem as Outlook.MailItem;
+                    if (currentMail != null)
+                    {
+                        if (currentMail.Sent)
+                        {
+                            frmDelegar f = new frmDelegar();
+                            f.ShowDialog();
+                            f.Dispose();
+                            f = null;
+                        }
+                        else
+                        {
+                            frmDelegarEnviar f = new frmDelegarEnviar();
+                            f.Show();
+                            f = null;
+                        }
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                if (activeWindow != null) Marshal.ReleaseComObject(activeWindow);
+                if (inspector != null) Marshal.ReleaseComObject(inspector);
+                if (currentMail != null) Marshal.ReleaseComObject(currentMail);
+            }
+        }
     }
 }

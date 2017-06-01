@@ -32,8 +32,8 @@ namespace fncGTD4Outlook
         {
             if (m_Events == null) return;
             m_Events.KeyDown -= OnKeyDown;
-            m_Events.KeyUp -= OnKeyUp;
-            m_Events.KeyPress -= HookManager_KeyPress;
+            //m_Events.KeyUp -= OnKeyUp;
+            //m_Events.KeyPress -= HookManager_KeyPress;
 
             m_Events.Dispose();
             m_Events = null;
@@ -43,14 +43,12 @@ namespace fncGTD4Outlook
         {
             m_Events = events;
             m_Events.KeyDown += OnKeyDown;
-            m_Events.KeyUp += OnKeyUp;
-            m_Events.KeyPress += HookManager_KeyPress;
+            //m_Events.KeyUp += OnKeyUp;
+            //m_Events.KeyPress += HookManager_KeyPress;
         }
 
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
-            //MessageBox.Show(string.Format("KeyDown  \t\t {0}\n", e.KeyCode));
-
             if (e.Control && e.KeyCode == Keys.Enter)
             {
                 // get active Window
@@ -59,10 +57,13 @@ namespace fncGTD4Outlook
                 Outlook.MailItem currentMail = null;
                 try
                 {
-                    //if (activeWindow is Outlook.Explorer)
-                    //{
-
-                    //}
+                    if (activeWindow is Outlook.Explorer)
+                    {
+                        frmDelegar f = new frmDelegar();
+                        f.ShowDialog();
+                        f.Dispose();
+                        f = null;
+                    }
                     if (activeWindow is Outlook.Inspector)
                     {
                         // its an inspector window
@@ -112,7 +113,9 @@ namespace fncGTD4Outlook
 
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
-            SubscribeApplication();
+            //SubscribeApplication();
+
+            InterceptKeys.SetHook();
 
             string folderArchivar = Constants.folderArchivar;
             string folderDelegar = Constants.folderDelegar;
@@ -280,7 +283,9 @@ namespace fncGTD4Outlook
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
         {
-            Unsubscribe();
+            //Unsubscribe();
+
+            InterceptKeys.ReleaseHook();
 
             // Note: Outlook no longer raises this event. If you have code that 
             //    must run when Outlook shuts down, see https://go.microsoft.com/fwlink/?LinkId=506785
