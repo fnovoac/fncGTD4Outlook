@@ -140,7 +140,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmDiferir";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Diferir emails";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmDiferir_FormClosing);
             this.Load += new System.EventHandler(this.frmDiferir_Load);

@@ -191,7 +191,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmDelegar";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Delegar email";
             this.Load += new System.EventHandler(this.frmDelegar_Load);
             this.panel1.ResumeLayout(false);

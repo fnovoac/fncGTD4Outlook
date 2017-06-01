@@ -150,6 +150,7 @@
             this.btnCancelar.TabIndex = 6;
             this.btnCancelar.Text = "Cancelar";
             this.btnCancelar.UseVisualStyleBackColor = true;
+            this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
             // 
             // frmDelegarEnviar
             // 
@@ -172,7 +173,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmDelegarEnviar";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Delegar y Enviar";
             this.Load += new System.EventHandler(this.frmDelegarEnviar_Load);
             this.panel1.ResumeLayout(false);
