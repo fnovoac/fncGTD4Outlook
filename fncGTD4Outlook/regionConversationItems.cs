@@ -41,35 +41,8 @@ namespace fncGTD4Outlook
         // Occurs before the form region is displayed.
         // Use this.OutlookItem to get a reference to the current Outlook item.
         // Use this.OutlookFormRegion to get a reference to the form region.
-        private void regionConversationItems_FormRegionShowing(object sender, System.EventArgs e)
+        private async void regionConversationItems_FormRegionShowing(object sender, System.EventArgs e)
         {
-            
-        }
-
-        // Occurs when the form region is closed.
-        // Use this.OutlookItem to get a reference to the current Outlook item.
-        // Use this.OutlookFormRegion to get a reference to the form region.
-        private void regionConversationItems_FormRegionClosed(object sender, System.EventArgs e)
-        {
-        }
-
-        private async void regionConversationItems_Load(object sender, EventArgs e)
-        {
-            listViewConversation.View = View.Details;
-            listViewConversation.FullRowSelect = true;
-            listViewConversation.MultiSelect = false;
-            listViewConversation.HeaderStyle = ColumnHeaderStyle.Nonclickable;
-
-            listViewConversation.Columns.Add("EntryID");
-            listViewConversation.Columns.Add("Recibido");
-            listViewConversation.Columns.Add("Ubicación");
-            listViewConversation.Columns.Add("De");
-            listViewConversation.Columns.Add("Mensaje");
-            listViewConversation.Columns.Add("Tarea");
-            listViewConversation.Columns.Add("Adjuntos");
-
-            listViewConversation.Columns[0].Width = 0;
-
             Outlook.MailItem selectedMailm = null;
             Outlook.MailItem mailItem = null;
             Outlook.Conversation conv = null;
@@ -151,26 +124,15 @@ namespace fncGTD4Outlook
                     return listaRange;
                 });
 
-
-
                 listViewConversation.Items.AddRange(result);
 
                 listViewConversation.SuspendLayout();
-                listViewConversation.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-                listViewConversation.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-                listViewConversation.Columns[0].Width = 0;
+                for (int i = 1; i < listViewConversation.Columns.Count; i++)
+                {
+                    listViewConversation.Columns[i].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+                    listViewConversation.Columns[i].AutoResize(ColumnHeaderAutoResizeStyle.HeaderSize);
+                }
                 listViewConversation.ResumeLayout();
-
-                //////listViewConversation.Items.Clear();
-                //////listViewConversation.BeginUpdate();
-                ////////for (int i = result.Count - 1; i >= 0; i--)
-                ////////{
-                ////////    listViewConversation.Items.Add(new ListViewItem(result[i]));
-                ////////}
-                //////listViewConversation.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-                //////listViewConversation.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-                //////listViewConversation.Columns[0].Width = 0;
-                //////listViewConversation.EndUpdate();
 
             }
             catch (Exception)
@@ -185,6 +147,35 @@ namespace fncGTD4Outlook
             if (oTable != null) Marshal.ReleaseComObject(oTable);
             if (oItem != null) Marshal.ReleaseComObject(oItem);
             if (conv != null) Marshal.ReleaseComObject(conv);
+        }
+
+        // Occurs when the form region is closed.
+        // Use this.OutlookItem to get a reference to the current Outlook item.
+        // Use this.OutlookFormRegion to get a reference to the form region.
+        private void regionConversationItems_FormRegionClosed(object sender, System.EventArgs e)
+        {
+
+
+        }
+
+        private void regionConversationItems_Load(object sender, EventArgs e)
+        {
+            listViewConversation.View = View.Details;
+            listViewConversation.FullRowSelect = true;
+            listViewConversation.MultiSelect = false;
+            listViewConversation.HeaderStyle = ColumnHeaderStyle.Nonclickable;
+
+            listViewConversation.Columns.Add("EntryID");
+            listViewConversation.Columns.Add("Recibido");
+            listViewConversation.Columns.Add("Ubicación");
+            listViewConversation.Columns.Add("De");
+            listViewConversation.Columns.Add("Mensaje");
+            listViewConversation.Columns.Add("Tarea");
+            listViewConversation.Columns.Add("Adjuntos");
+
+            listViewConversation.Columns[0].Width = 0;
+
+
 
             //////////////// Set up background worker object & hook up handlers
             //////////////bgWorker = new BackgroundWorker();
