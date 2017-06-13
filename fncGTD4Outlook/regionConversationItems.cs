@@ -18,7 +18,7 @@ namespace fncGTD4Outlook
     {
         private BackgroundWorker bgWorker;
 
-        private SynchronizationContext synchronizationContext;
+        //List<string[]> listConversaciones = new List<string[]>();
 
 
         #region Form Region Factory 
@@ -68,11 +68,123 @@ namespace fncGTD4Outlook
             listViewConversation.Columns.Add("Tarea");
             listViewConversation.Columns.Add("Adjuntos");
 
+            listViewConversation.Columns[0].Width = 0;
 
-            synchronizationContext = SynchronizationContext.Current;
+            Outlook.MailItem selectedMailm = null;
+            Outlook.MailItem mailItem = null;
+            Outlook.Conversation conv = null;
+            Outlook.Table oTable = null;
+            Outlook.Row oRow = null;
+            object oItem = null;
+            Outlook.Folder inFolder = null;
 
-            await Task.Run(() => LlenarListViewConversaciones());
+            try
+            {
+                ListViewItem[] result = await Task.Run(() =>
+                {
+                    string lastID = string.Empty;
 
+                    selectedMailm = this.OutlookItem as Outlook.MailItem;
+
+                    List<string[]> listData = new List<string[]>();
+
+                    if (Utils.originalEmailsAsTask != null) Utils.originalEmailsAsTask.Clear();
+
+                    if (selectedMailm != null)
+                    {
+                        if (selectedMailm.ConversationID != null)
+                        {
+                            // Obtain a Conversation object. 
+                            conv = selectedMailm.GetConversation();
+                            if (conv != null)
+                            {
+                                oTable = conv.GetTable();
+
+                                while (!oTable.EndOfTable)
+                                {
+                                    oRow = oTable.GetNextRow();
+                                    oItem = Globals.ThisAddIn.Application.Session.GetItemFromID(oRow["EntryID"]);
+                                    if (oItem is Outlook.MailItem)
+                                    {
+                                        mailItem = oItem as Outlook.MailItem;
+                                        inFolder = mailItem.Parent as Outlook.Folder;
+
+                                        //por alguna razón algunas veces algunos elementos se agregan 2 veces
+                                        if (lastID != oRow["EntryID"])
+                                        {
+                                            string[] row = {oRow["EntryID"],
+                                                        mailItem.ReceivedTime.ToShortDateString() + " " + mailItem.ReceivedTime.ToShortTimeString(),
+                                                        inFolder.Name,
+                                                        mailItem.SenderName,
+                                                        mailItem.Body.Substring(0,180) + "...",
+                                                        mailItem.IsMarkedAsTask.ToString(),
+                                                        (_cantidadAdjuntos(mailItem)>0)?_cantidadAdjuntos(mailItem).ToString():""
+                                                        };
+
+                                            listData.Add(row);
+
+                                            if (mailItem.IsMarkedAsTask)
+                                            {
+                                                Utils.originalEmailsAsTask.Add(oRow["EntryID"]);
+                                            }
+                                        }
+
+                                        lastID = oRow["EntryID"];
+
+                                        //Marshal.ReleaseComObject(mailItem);
+                                        //Marshal.ReleaseComObject(inFolder);
+                                    }
+                                    //Marshal.ReleaseComObject(oItem);
+                                    //Marshal.ReleaseComObject(oRow);
+                                }
+
+                            }
+                        }
+                    }
+
+                    ListViewItem[] listaRange = new ListViewItem[listData.Count];
+                    for (int i = listData.Count - 1; i >= 0; i--)
+                    {
+                        listaRange[i] = new ListViewItem(listData[i]);
+                    }
+
+                    return listaRange;
+                });
+
+
+
+                listViewConversation.Items.AddRange(result);
+
+                listViewConversation.SuspendLayout();
+                listViewConversation.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+                listViewConversation.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+                listViewConversation.Columns[0].Width = 0;
+                listViewConversation.ResumeLayout();
+
+                //////listViewConversation.Items.Clear();
+                //////listViewConversation.BeginUpdate();
+                ////////for (int i = result.Count - 1; i >= 0; i--)
+                ////////{
+                ////////    listViewConversation.Items.Add(new ListViewItem(result[i]));
+                ////////}
+                //////listViewConversation.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+                //////listViewConversation.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+                //////listViewConversation.Columns[0].Width = 0;
+                //////listViewConversation.EndUpdate();
+
+            }
+            catch (Exception)
+            {
+
+            }
+
+            if (selectedMailm != null) Marshal.ReleaseComObject(selectedMailm);
+            if (mailItem != null) Marshal.ReleaseComObject(mailItem);
+            if (inFolder != null) Marshal.ReleaseComObject(inFolder);
+            if (oRow != null) Marshal.ReleaseComObject(oRow);
+            if (oTable != null) Marshal.ReleaseComObject(oTable);
+            if (oItem != null) Marshal.ReleaseComObject(oItem);
+            if (conv != null) Marshal.ReleaseComObject(conv);
 
             //////////////// Set up background worker object & hook up handlers
             //////////////bgWorker = new BackgroundWorker();
@@ -86,102 +198,127 @@ namespace fncGTD4Outlook
 
         }
 
-
         private void LlenarListViewConversaciones()
         {
-            Outlook.MailItem selectedMailm = null;
-            Outlook.MailItem mailItem = null;
-            Outlook.Conversation conv = null;
-            Outlook.Table oTable = null;
-            Outlook.Row oRow = null;
-            object oItem = null;
-            Outlook.Folder inFolder = null;
+            //Task task = Task.Run(() =>
+            //{
+            //    ObtenerMailsDeConversacion();
+            //});
 
-            string lastID = string.Empty;
+            //Task UITask = task.ContinueWith(_ =>
+            //{
+            //    listViewConversation.Items.Clear();
+            //    //MessageBox.Show("bien!");
+            //    listViewConversation.BeginUpdate();
+            //    for (int i = listConversaciones.Count - 1; i >= 0; i--)
+            //    {
+            //        listViewConversation.Items.Add(new ListViewItem(listConversaciones[i]));
+            //    }
+            //    listViewConversation.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+            //    listViewConversation.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+            //    listViewConversation.Columns[0].Width = 0;
+            //    listViewConversation.EndUpdate();
+            //}, TaskScheduler.FromCurrentSynchronizationContext());
 
-            List<string[]> listData = new List<string[]>();
 
-            selectedMailm = this.OutlookItem as Outlook.MailItem;
 
-            if (Utils.originalEmailsAsTask != null) Utils.originalEmailsAsTask.Clear();
+        }
 
-            try
-            {
-                if (selectedMailm != null)
-                {
-                    if (selectedMailm.ConversationID != null)
-                    {
-                        // Obtain a Conversation object. 
-                        conv = selectedMailm.GetConversation();
-                        if (conv != null)
-                        {
-                            oTable = conv.GetTable();
+        private void ObtenerMailsDeConversacion()
+        {
+            //Outlook.MailItem selectedMailm = null;
+            //Outlook.MailItem mailItem = null;
+            //Outlook.Conversation conv = null;
+            //Outlook.Table oTable = null;
+            //Outlook.Row oRow = null;
+            //object oItem = null;
+            //Outlook.Folder inFolder = null;
 
-                            while (!oTable.EndOfTable)
-                            {
-                                oRow = oTable.GetNextRow();
-                                oItem = Globals.ThisAddIn.Application.Session.GetItemFromID(oRow["EntryID"]);
-                                if (oItem is Outlook.MailItem)
-                                {
-                                    mailItem = oItem as Outlook.MailItem;
-                                    inFolder = mailItem.Parent as Outlook.Folder;
+            //string lastID = string.Empty;
 
-                                    //por alguna razón algunas veces algunos elementos se agregan 2 veces
-                                    if (lastID != oRow["EntryID"])
-                                    {
-                                        string[] row = {oRow["EntryID"],
-                                                        mailItem.ReceivedTime.ToShortDateString() + " " + mailItem.ReceivedTime.ToShortTimeString(),
-                                                        inFolder.Name,
-                                                        mailItem.SenderName,
-                                                        mailItem.Body.Substring(0,180) + "...",
-                                                        mailItem.IsMarkedAsTask.ToString(),
-                                                        (_cantidadAdjuntos(mailItem)>0)?_cantidadAdjuntos(mailItem).ToString():""
-                                                        };
+            ////List<string[]> listConversaciones = new List<string[]>();
 
-                                        listData.Add(row);
+            //selectedMailm = this.OutlookItem as Outlook.MailItem;
 
-                                        if (mailItem.IsMarkedAsTask)
-                                        {
-                                            Utils.originalEmailsAsTask.Add(oRow["EntryID"]);
-                                        }
-                                    }
+            //if (Utils.originalEmailsAsTask != null) Utils.originalEmailsAsTask.Clear();
 
-                                    lastID = oRow["EntryID"];
+            //try
+            //{
+            //    if (selectedMailm != null)
+            //    {
+            //        if (selectedMailm.ConversationID != null)
+            //        {
+            //            // Obtain a Conversation object. 
+            //            conv = selectedMailm.GetConversation();
+            //            if (conv != null)
+            //            {
+            //                oTable = conv.GetTable();
 
-                                    Marshal.ReleaseComObject(mailItem);
-                                    Marshal.ReleaseComObject(inFolder);
-                                }
-                                Marshal.ReleaseComObject(oItem);
-                                Marshal.ReleaseComObject(oRow);
-                            }
-                            e.Result = listData;
-                        }
-                    }
-                }
+            //                while (!oTable.EndOfTable)
+            //                {
+            //                    oRow = oTable.GetNextRow();
+            //                    oItem = Globals.ThisAddIn.Application.Session.GetItemFromID(oRow["EntryID"]);
+            //                    if (oItem is Outlook.MailItem)
+            //                    {
+            //                        mailItem = oItem as Outlook.MailItem;
+            //                        inFolder = mailItem.Parent as Outlook.Folder;
 
-                if (selectedMailm != null) Marshal.ReleaseComObject(selectedMailm);
-                if (mailItem != null) Marshal.ReleaseComObject(mailItem);
-                if (inFolder != null) Marshal.ReleaseComObject(inFolder);
-                if (oRow != null) Marshal.ReleaseComObject(oRow);
-                if (oTable != null) Marshal.ReleaseComObject(oTable);
-                if (oItem != null) Marshal.ReleaseComObject(oItem);
-                if (conv != null) Marshal.ReleaseComObject(conv);
+            //                        //por alguna razón algunas veces algunos elementos se agregan 2 veces
+            //                        if (lastID != oRow["EntryID"])
+            //                        {
+            //                            string[] row = {oRow["EntryID"],
+            //                                            mailItem.ReceivedTime.ToShortDateString() + " " + mailItem.ReceivedTime.ToShortTimeString(),
+            //                                            inFolder.Name,
+            //                                            mailItem.SenderName,
+            //                                            mailItem.Body.Substring(0,180) + "...",
+            //                                            mailItem.IsMarkedAsTask.ToString(),
+            //                                            (_cantidadAdjuntos(mailItem)>0)?_cantidadAdjuntos(mailItem).ToString():""
+            //                                            };
 
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                if (selectedMailm != null) Marshal.ReleaseComObject(selectedMailm);
-                if (mailItem != null) Marshal.ReleaseComObject(mailItem);
-                if (inFolder != null) Marshal.ReleaseComObject(inFolder);
-                if (oRow != null) Marshal.ReleaseComObject(oRow);
-                if (oTable != null) Marshal.ReleaseComObject(oTable);
-                if (oItem != null) Marshal.ReleaseComObject(oItem);
-                if (conv != null) Marshal.ReleaseComObject(conv);
-            }
+            //                            listConversaciones.Add(row);
+
+            //                            if (mailItem.IsMarkedAsTask)
+            //                            {
+            //                                Utils.originalEmailsAsTask.Add(oRow["EntryID"]);
+            //                            }
+            //                        }
+
+            //                        lastID = oRow["EntryID"];
+
+            //                        //Marshal.ReleaseComObject(mailItem);
+            //                        //Marshal.ReleaseComObject(inFolder);
+            //                    }
+            //                    //Marshal.ReleaseComObject(oItem);
+            //                    //Marshal.ReleaseComObject(oRow);
+            //                }
+                            
+            //            }
+            //        }
+            //    }
+
+            //    if (selectedMailm != null) Marshal.ReleaseComObject(selectedMailm);
+            //    if (mailItem != null) Marshal.ReleaseComObject(mailItem);
+            //    if (inFolder != null) Marshal.ReleaseComObject(inFolder);
+            //    if (oRow != null) Marshal.ReleaseComObject(oRow);
+            //    if (oTable != null) Marshal.ReleaseComObject(oTable);
+            //    if (oItem != null) Marshal.ReleaseComObject(oItem);
+            //    if (conv != null) Marshal.ReleaseComObject(conv);
+
+            //}
+            //catch (Exception)
+            //{
+            //    throw;
+            //}
+            //finally
+            //{
+            //    if (selectedMailm != null) Marshal.ReleaseComObject(selectedMailm);
+            //    if (mailItem != null) Marshal.ReleaseComObject(mailItem);
+            //    if (inFolder != null) Marshal.ReleaseComObject(inFolder);
+            //    if (oRow != null) Marshal.ReleaseComObject(oRow);
+            //    if (oTable != null) Marshal.ReleaseComObject(oTable);
+            //    if (oItem != null) Marshal.ReleaseComObject(oItem);
+            //    if (conv != null) Marshal.ReleaseComObject(conv);
+            //}
         }
 
 

@@ -61,7 +61,7 @@
             this.Size = new System.Drawing.Size(875, 134);
             this.FormRegionShowing += new System.EventHandler(this.regionConversationItems_FormRegionShowing);
             this.FormRegionClosed += new System.EventHandler(this.regionConversationItems_FormRegionClosed);
-            this.Load += new System.EventHandler(this.regionConversationItems_LoadAsync);
+            this.Load += new System.EventHandler(this.regionConversationItems_Load);
             this.ResumeLayout(false);
 
         }
