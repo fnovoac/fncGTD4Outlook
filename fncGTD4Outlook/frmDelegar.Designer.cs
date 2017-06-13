@@ -40,6 +40,7 @@
             this.txtContacto = new System.Windows.Forms.TextBox();
             this.dateTimePickerRecordatorio = new System.Windows.Forms.DateTimePicker();
             this.lblCantidadEmails = new System.Windows.Forms.Label();
+            this.cboStatus = new System.Windows.Forms.ComboBox();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -59,7 +60,7 @@
             this.monthCalendar.Location = new System.Drawing.Point(6, 88);
             this.monthCalendar.MaxSelectionCount = 1;
             this.monthCalendar.Name = "monthCalendar";
-            this.monthCalendar.TabIndex = 2;
+            this.monthCalendar.TabIndex = 3;
             this.monthCalendar.DateChanged += new System.Windows.Forms.DateRangeEventHandler(this.monthCalendar_DateChanged);
             // 
             // label2
@@ -77,7 +78,7 @@
             this.chkRecordatorio.Location = new System.Drawing.Point(22, 258);
             this.chkRecordatorio.Name = "chkRecordatorio";
             this.chkRecordatorio.Size = new System.Drawing.Size(116, 19);
-            this.chkRecordatorio.TabIndex = 3;
+            this.chkRecordatorio.TabIndex = 4;
             this.chkRecordatorio.Text = "Fijar recordatorio";
             this.chkRecordatorio.UseVisualStyleBackColor = true;
             this.chkRecordatorio.CheckedChanged += new System.EventHandler(this.chkRecordatorio_CheckedChanged);
@@ -100,7 +101,7 @@
             this.btnDelegar.Location = new System.Drawing.Point(289, 14);
             this.btnDelegar.Name = "btnDelegar";
             this.btnDelegar.Size = new System.Drawing.Size(106, 23);
-            this.btnDelegar.TabIndex = 5;
+            this.btnDelegar.TabIndex = 6;
             this.btnDelegar.Text = "Delegar";
             this.btnDelegar.UseVisualStyleBackColor = true;
             this.btnDelegar.Click += new System.EventHandler(this.btnDelegar_Click);
@@ -111,7 +112,7 @@
             this.btnCancelar.Location = new System.Drawing.Point(401, 14);
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(75, 23);
-            this.btnCancelar.TabIndex = 6;
+            this.btnCancelar.TabIndex = 7;
             this.btnCancelar.Text = "Cancelar";
             this.btnCancelar.UseVisualStyleBackColor = true;
             this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
@@ -131,7 +132,7 @@
             this.cboPlazo.Location = new System.Drawing.Point(94, 59);
             this.cboPlazo.Name = "cboPlazo";
             this.cboPlazo.Size = new System.Drawing.Size(181, 23);
-            this.cboPlazo.TabIndex = 1;
+            this.cboPlazo.TabIndex = 2;
             this.cboPlazo.SelectedIndexChanged += new System.EventHandler(this.cboPlazo_SelectedIndexChanged);
             this.cboPlazo.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cboPlazo_KeyDown);
             // 
@@ -139,7 +140,7 @@
             // 
             this.txtContacto.Location = new System.Drawing.Point(94, 18);
             this.txtContacto.Name = "txtContacto";
-            this.txtContacto.Size = new System.Drawing.Size(406, 23);
+            this.txtContacto.Size = new System.Drawing.Size(256, 23);
             this.txtContacto.TabIndex = 0;
             this.txtContacto.TextChanged += new System.EventHandler(this.txtContacto_TextChanged);
             this.txtContacto.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtContacto_KeyDown);
@@ -154,7 +155,7 @@
             this.dateTimePickerRecordatorio.Name = "dateTimePickerRecordatorio";
             this.dateTimePickerRecordatorio.ShowUpDown = true;
             this.dateTimePickerRecordatorio.Size = new System.Drawing.Size(85, 23);
-            this.dateTimePickerRecordatorio.TabIndex = 4;
+            this.dateTimePickerRecordatorio.TabIndex = 5;
             // 
             // lblCantidadEmails
             // 
@@ -169,6 +170,14 @@
             this.lblCantidadEmails.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblCantidadEmails.Visible = false;
             // 
+            // cboStatus
+            // 
+            this.cboStatus.FormattingEnabled = true;
+            this.cboStatus.Location = new System.Drawing.Point(378, 18);
+            this.cboStatus.Name = "cboStatus";
+            this.cboStatus.Size = new System.Drawing.Size(121, 23);
+            this.cboStatus.TabIndex = 1;
+            // 
             // frmDelegar
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -176,6 +185,7 @@
             this.BackColor = System.Drawing.Color.White;
             this.CancelButton = this.btnCancelar;
             this.ClientSize = new System.Drawing.Size(514, 360);
+            this.Controls.Add(this.cboStatus);
             this.Controls.Add(this.lblCantidadEmails);
             this.Controls.Add(this.dateTimePickerRecordatorio);
             this.Controls.Add(this.txtContacto);
@@ -214,5 +224,6 @@
         private System.Windows.Forms.TextBox txtContacto;
         private System.Windows.Forms.DateTimePicker dateTimePickerRecordatorio;
         private System.Windows.Forms.Label lblCantidadEmails;
+        private System.Windows.Forms.ComboBox cboStatus;
     }
 }

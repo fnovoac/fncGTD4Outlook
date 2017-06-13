@@ -50,7 +50,7 @@ namespace fncGTD4Outlook
 
             try
             {
-                emails = Utils.getMailItems();
+                emails = Utils.GetMailItems();
 
                 if (emails != null)
                 {
@@ -153,7 +153,7 @@ namespace fncGTD4Outlook
         private void btnDiferir_Click(object sender, EventArgs e)
         {
             Outlook.NameSpace ns = null;
-            Outlook.AppointmentItem apptItem = null;
+            //Outlook.AppointmentItem apptItem = null;
             try
             {
                 if (cboPlazo.SelectedIndex > 0)

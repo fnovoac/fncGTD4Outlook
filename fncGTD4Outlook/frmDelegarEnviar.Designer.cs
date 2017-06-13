@@ -39,6 +39,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnDelegar = new System.Windows.Forms.Button();
             this.btnCancelar = new System.Windows.Forms.Button();
+            this.cboStatus = new System.Windows.Forms.ComboBox();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -46,8 +47,8 @@
             // 
             this.txtContacto.Location = new System.Drawing.Point(94, 18);
             this.txtContacto.Name = "txtContacto";
-            this.txtContacto.Size = new System.Drawing.Size(406, 23);
-            this.txtContacto.TabIndex = 1;
+            this.txtContacto.Size = new System.Drawing.Size(256, 23);
+            this.txtContacto.TabIndex = 0;
             this.txtContacto.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtContacto_KeyDown);
             // 
             // label1
@@ -74,7 +75,7 @@
             this.cboPlazo.Location = new System.Drawing.Point(94, 59);
             this.cboPlazo.Name = "cboPlazo";
             this.cboPlazo.Size = new System.Drawing.Size(181, 23);
-            this.cboPlazo.TabIndex = 14;
+            this.cboPlazo.TabIndex = 2;
             this.cboPlazo.SelectedIndexChanged += new System.EventHandler(this.cboPlazo_SelectedIndexChanged);
             this.cboPlazo.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cboPlazo_KeyDown);
             // 
@@ -94,7 +95,7 @@
             this.monthCalendar.Location = new System.Drawing.Point(6, 88);
             this.monthCalendar.MaxSelectionCount = 1;
             this.monthCalendar.Name = "monthCalendar";
-            this.monthCalendar.TabIndex = 17;
+            this.monthCalendar.TabIndex = 3;
             this.monthCalendar.DateChanged += new System.Windows.Forms.DateRangeEventHandler(this.monthCalendar_DateChanged);
             // 
             // dateTimePickerRecordatorio
@@ -106,7 +107,7 @@
             this.dateTimePickerRecordatorio.Name = "dateTimePickerRecordatorio";
             this.dateTimePickerRecordatorio.ShowUpDown = true;
             this.dateTimePickerRecordatorio.Size = new System.Drawing.Size(85, 23);
-            this.dateTimePickerRecordatorio.TabIndex = 19;
+            this.dateTimePickerRecordatorio.TabIndex = 5;
             // 
             // chkRecordatorio
             // 
@@ -114,7 +115,7 @@
             this.chkRecordatorio.Location = new System.Drawing.Point(22, 258);
             this.chkRecordatorio.Name = "chkRecordatorio";
             this.chkRecordatorio.Size = new System.Drawing.Size(116, 19);
-            this.chkRecordatorio.TabIndex = 18;
+            this.chkRecordatorio.TabIndex = 4;
             this.chkRecordatorio.Text = "Fijar recordatorio";
             this.chkRecordatorio.UseVisualStyleBackColor = true;
             this.chkRecordatorio.CheckedChanged += new System.EventHandler(this.chkRecordatorio_CheckedChanged);
@@ -136,7 +137,7 @@
             this.btnDelegar.Location = new System.Drawing.Point(289, 14);
             this.btnDelegar.Name = "btnDelegar";
             this.btnDelegar.Size = new System.Drawing.Size(106, 23);
-            this.btnDelegar.TabIndex = 5;
+            this.btnDelegar.TabIndex = 6;
             this.btnDelegar.Text = "Delegar y Enviar";
             this.btnDelegar.UseVisualStyleBackColor = true;
             this.btnDelegar.Click += new System.EventHandler(this.btnDelegar_Click);
@@ -147,10 +148,18 @@
             this.btnCancelar.Location = new System.Drawing.Point(401, 14);
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(75, 23);
-            this.btnCancelar.TabIndex = 6;
+            this.btnCancelar.TabIndex = 7;
             this.btnCancelar.Text = "Cancelar";
             this.btnCancelar.UseVisualStyleBackColor = true;
             this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
+            // 
+            // cboStatus
+            // 
+            this.cboStatus.FormattingEnabled = true;
+            this.cboStatus.Location = new System.Drawing.Point(378, 18);
+            this.cboStatus.Name = "cboStatus";
+            this.cboStatus.Size = new System.Drawing.Size(121, 23);
+            this.cboStatus.TabIndex = 1;
             // 
             // frmDelegarEnviar
             // 
@@ -159,6 +168,7 @@
             this.BackColor = System.Drawing.Color.White;
             this.CancelButton = this.btnCancelar;
             this.ClientSize = new System.Drawing.Size(514, 360);
+            this.Controls.Add(this.cboStatus);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.dateTimePickerRecordatorio);
             this.Controls.Add(this.chkRecordatorio);
@@ -195,5 +205,6 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button btnDelegar;
         private System.Windows.Forms.Button btnCancelar;
+        private System.Windows.Forms.ComboBox cboStatus;
     }
 }

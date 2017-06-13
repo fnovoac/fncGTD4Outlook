@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -12,6 +13,9 @@ namespace fncGTD4Outlook.Comun
 {
     public static class Utils
     {
+        public static List<string> originalEmailsAsTask;
+
+
         // Returns Folder object based on folder path
         public static Outlook.MAPIFolder GetFolderByName(string folderName)
         {
@@ -56,10 +60,115 @@ namespace fncGTD4Outlook.Comun
 
 
         /// <summary>
+        /// Obtiene un listado de todos los emails, appointments y meetings seleccionados
+        /// </summary>
+        /// <returns>Lista de objetos</returns>
+        public static List<object> GetOutlookItems()
+        {
+            List<object> selObjects = new List<object>();
+
+            object activeWindow = null;
+            Outlook.Explorer explorer = null;
+            Outlook.Inspector inspector = null;
+            Object selObject = null;
+
+            try
+            {
+                // get active Window
+                activeWindow = Globals.ThisAddIn.Application.ActiveWindow();
+                if (activeWindow is Outlook.Explorer)
+                {
+                    explorer = Globals.ThisAddIn.Application.ActiveExplorer();
+                    if (Globals.ThisAddIn.Application.ActiveExplorer().Selection.Count > 0)
+                    {
+                        for (int i = 1; i <= Globals.ThisAddIn.Application.ActiveExplorer().Selection.Count; i++)
+                        {
+                            selObject = Globals.ThisAddIn.Application.ActiveExplorer().Selection[i];
+                            if (selObject is Outlook.MailItem)
+                            {
+                                Outlook.MailItem item = (selObject as Outlook.MailItem);
+                                selObjects.Add(item);
+                            }
+
+                            if (selObject is Outlook.AppointmentItem)
+                            {
+                                Outlook.AppointmentItem item = (selObject as Outlook.AppointmentItem);
+                                selObjects.Add(item);
+                            }
+
+                            if (selObject is Outlook.MeetingItem)
+                            {
+                                Outlook.MeetingItem item = (selObject as Outlook.MeetingItem);
+                                selObjects.Add(item);
+                            }
+                        }
+                    }
+                    if (explorer != null) Marshal.ReleaseComObject(explorer);
+                }
+                if (activeWindow is Outlook.Inspector)
+                {
+                    inspector = Globals.ThisAddIn.Application.ActiveInspector();
+                    selObject = inspector.CurrentItem;
+                    if (selObject is Outlook.MailItem)
+                    {
+                        Outlook.MailItem item = (selObject as Outlook.MailItem);
+                        selObjects.Add(item);
+                    }
+
+                    if (selObject is Outlook.AppointmentItem)
+                    {
+                        Outlook.AppointmentItem item = (selObject as Outlook.AppointmentItem);
+                        selObjects.Add(item);
+                    }
+
+                    if (selObject is Outlook.MeetingItem)
+                    {
+                        Outlook.MeetingItem item = (selObject as Outlook.MeetingItem);
+                        selObjects.Add(item);
+                    }
+                    if (inspector != null) Marshal.ReleaseComObject(inspector);
+                }
+                if (activeWindow != null) Marshal.ReleaseComObject(activeWindow);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                if (activeWindow != null) Marshal.ReleaseComObject(activeWindow);
+                if (explorer != null) Marshal.ReleaseComObject(explorer);
+                if (inspector != null) Marshal.ReleaseComObject(inspector);
+                if (selObject != null) Marshal.ReleaseComObject(selObject);
+            }
+
+            return selObjects;
+        }
+
+        /// <summary>
+        /// Obtiene el email, appointment o meeting seleccionado
+        /// </summary>
+        /// <returns>objeto</returns>
+        public static object GetOutlookItem()
+        {
+            object oItem = null;
+            try
+            {
+                oItem = GetOutlookItems()[0];
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return oItem;
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public static List<Outlook.AppointmentItem> getAppointmentItems()
+        public static List<Outlook.AppointmentItem> GetAppointmentItems()
         {
             List<Outlook.AppointmentItem> appItems = new List<Outlook.AppointmentItem>();
 
@@ -95,7 +204,7 @@ namespace fncGTD4Outlook.Comun
                     if (actInspector != null) Marshal.ReleaseComObject(actInspector);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -109,12 +218,12 @@ namespace fncGTD4Outlook.Comun
         /// 
         /// </summary>
         /// <returns></returns>
-        public static Outlook.AppointmentItem getAppointmentItem()
+        public static Outlook.AppointmentItem GetAppointmentItem()
         {
             Outlook.AppointmentItem appItem = null;
             try
             {
-                appItem = getAppointmentItems()[0];
+                appItem = GetAppointmentItems()[0];
             }
             catch (Exception)
             {
@@ -129,7 +238,7 @@ namespace fncGTD4Outlook.Comun
         /// Función que devuelve un arreglo con los mails seleccionados
         /// </summary>
         /// <returns>Mails seleccionados</returns>
-        public static List<Outlook.MailItem> getMailItems()
+        public static List<Outlook.MailItem> GetMailItems()
         {
             List<Outlook.MailItem> mails = new List<Outlook.MailItem>();
 
@@ -196,12 +305,12 @@ namespace fncGTD4Outlook.Comun
 
         }
 
-        public static Outlook.MailItem getMailItem()
+        public static Outlook.MailItem GetMailItem()
         {
             Outlook.MailItem email = null;
             try
             {
-                email = getMailItems()[0];
+                email = GetMailItems()[0];
             }
             catch (Exception)
             {
@@ -211,7 +320,7 @@ namespace fncGTD4Outlook.Comun
             return email;
         }
 
-        public static List<Outlook.ContactItem> getListOfContacts (bool incluirSugeridos = false)
+        public static List<Outlook.ContactItem> GetListOfContacts (bool incluirSugeridos = false)
         {
             List<Outlook.ContactItem> contactItemsList = null;
             Outlook.Items folderItems = null;
@@ -269,6 +378,98 @@ namespace fncGTD4Outlook.Comun
 
         }
 
+
+        public static void ArchivarOutlookItems()
+        {
+            Outlook.MAPIFolder objfolder = null;
+            object activeWindow = null;
+            Outlook.Explorer explorer = null;
+            Outlook.Inspector inspector = null;
+            //Object selObject = null;
+
+            try
+            {
+                //obtenemos el folder donde moveremos el email (debe existir -> ver ThisAddIn.cs)
+                objfolder = Utils.GetFolderByName(Constants.folderArchivar);
+
+                if (objfolder == null)
+                    objfolder = Globals.ThisAddIn.Application.Session.DefaultStore.GetRootFolder().Folders.Add(Constants.folderArchivar);
+
+                // get active Window
+                activeWindow = Globals.ThisAddIn.Application.ActiveWindow();
+                if (activeWindow is Outlook.Explorer)
+                {
+                    explorer = Globals.ThisAddIn.Application.ActiveExplorer();
+                    if (Globals.ThisAddIn.Application.ActiveExplorer().Selection.Count > 0)
+                    {
+                        foreach (object selObject in Globals.ThisAddIn.Application.ActiveExplorer().Selection)
+                        {
+                            if (selObject is Outlook.MailItem)
+                            {
+                                Outlook.MailItem item = (selObject as Outlook.MailItem);
+                                item.UnRead = false;
+                                item.Move(objfolder);
+                            }
+
+                            if (selObject is Outlook.AppointmentItem)
+                            {
+                                Outlook.AppointmentItem item = (selObject as Outlook.AppointmentItem);
+                                item.UnRead = false;
+                                item.Move(objfolder);
+                            }
+
+                            if (selObject is Outlook.MeetingItem)
+                            {
+                                Outlook.MeetingItem item = (selObject as Outlook.MeetingItem);
+                                item.UnRead = false;
+                                item.Move(objfolder);
+                            }
+                        }
+                    }
+                    if (explorer != null) Marshal.ReleaseComObject(explorer);
+                }
+                if (activeWindow is Outlook.Inspector)
+                {
+                    inspector = Globals.ThisAddIn.Application.ActiveInspector();
+                    object selObject = inspector.CurrentItem;
+                    if (selObject is Outlook.MailItem)
+                    {
+                        Outlook.MailItem item = (selObject as Outlook.MailItem);
+                        item.UnRead = false;
+                        item.Move(objfolder);
+                    }
+
+                    if (selObject is Outlook.AppointmentItem)
+                    {
+                        Outlook.AppointmentItem item = (selObject as Outlook.AppointmentItem);
+                        item.UnRead = false;
+                        item.Move(objfolder);
+                    }
+
+                    if (selObject is Outlook.MeetingItem)
+                    {
+                        Outlook.MeetingItem item = (selObject as Outlook.MeetingItem);
+                        item.UnRead = false;
+                        item.Move(objfolder);
+                    }
+                    if (inspector != null) Marshal.ReleaseComObject(inspector);
+                    if (selObject != null) Marshal.ReleaseComObject(selObject);
+                }
+                if (activeWindow != null) Marshal.ReleaseComObject(activeWindow);
+                
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                if (objfolder != null) Marshal.ReleaseComObject(objfolder);
+                if (activeWindow != null) Marshal.ReleaseComObject(activeWindow);
+                if (explorer != null) Marshal.ReleaseComObject(explorer);
+                if (inspector != null) Marshal.ReleaseComObject(inspector);
+            }
+        }
 
         /// <summary>
         /// Mueve el email seleccinado a una carpeta destino
@@ -341,8 +542,7 @@ namespace fncGTD4Outlook.Comun
                 }
             }
         }
-
-
+        
         public static string GetFirstReceiverFromTo(string input)
         {
             if (string.IsNullOrEmpty(input))
@@ -401,10 +601,13 @@ namespace fncGTD4Outlook.Comun
             {
                 if (activeWindow is Outlook.Explorer)
                 {
-                    frmDelegar f = new frmDelegar();
-                    f.ShowDialog();
-                    f.Dispose();
-                    f = null;
+                    //NOTA: a pesar de ejecutarse, queda el ENTER como remanente y abre el email si cancelamos el form
+                    //mejor lo desactivo hasta encontrar otra forma de cancelar el ENTER luego de capturar la combinacion de teclas
+
+                    //frmDelegar f = new frmDelegar();
+                    //f.ShowDialog();
+                    //f.Dispose();
+                    //f = null;
                 }
                 if (activeWindow is Outlook.Inspector)
                 {

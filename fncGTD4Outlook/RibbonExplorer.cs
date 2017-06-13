@@ -19,7 +19,7 @@ namespace fncGTD4Outlook
 
         private void btnArchivar_Click(object sender, RibbonControlEventArgs e)
         {
-            Utils.MoverEmail(Utils.getMailItems(), Constants.folderArchivar);
+            Utils.ArchivarOutlookItems();
         }
 
 
@@ -29,7 +29,7 @@ namespace fncGTD4Outlook
 
             try
             {
-                emails = Utils.getMailItems();
+                emails = Utils.GetMailItems();
 
                 for (int i = 0; i < emails.Count; i++)
                 {
@@ -72,7 +72,7 @@ namespace fncGTD4Outlook
         {
             try
             {
-                List<Outlook.MailItem> mailItems = Utils.getMailItems();
+                List<Outlook.MailItem> mailItems = Utils.GetMailItems();
                 if (mailItems != null)
                 {
                     for (int i = 0; i < mailItems.Count; i++)
@@ -91,12 +91,12 @@ namespace fncGTD4Outlook
 
         private void btnConservar_Click(object sender, RibbonControlEventArgs e)
         {
-            Utils.MoverEmail(Utils.getMailItems(), Constants.folderConservar);
+            Utils.MoverEmail(Utils.GetMailItems(), Constants.folderConservar);
         }
 
         private void btnReferencia_Click(object sender, RibbonControlEventArgs e)
         {
-            Utils.MoverEmail(Utils.getMailItems(), Constants.folderReferencia);
+            Utils.MoverEmail(Utils.GetMailItems(), Constants.folderReferencia);
         }
     }
 }

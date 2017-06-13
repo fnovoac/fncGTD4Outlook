@@ -53,7 +53,7 @@ namespace fncGTD4Outlook
 
             //Verificamos la data que el email ya pueda tener (en caso estemos haciendo una actualización)
             List<Outlook.MailItem> mails = new List<Outlook.MailItem>();
-            mails = Utils.getMailItems();
+            mails = Utils.GetMailItems();
 
             if (mails != null && mails.Count > 0)
             {
@@ -100,7 +100,7 @@ namespace fncGTD4Outlook
 
             //configuramos la opción de autocompletado del textbox
             List<Outlook.ContactItem> contactos = new List<Outlook.ContactItem>();
-            contactos = Utils.getListOfContacts(false);
+            contactos = Utils.GetListOfContacts(false);
 
             AutoCompleteStringCollection stringCol = new AutoCompleteStringCollection();
             for (int i = 0; i < contactos.Count; i++)
@@ -112,6 +112,14 @@ namespace fncGTD4Outlook
             txtContacto.AutoCompleteCustomSource = stringCol;
             txtContacto.AutoCompleteSource = AutoCompleteSource.CustomSource;
             txtContacto.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+
+            //Completamos los status
+            cboStatus.Items.Add("0 No iniciado");
+            cboStatus.Items.Add("1 En proceso");
+            cboStatus.Items.Add("2 Completado");
+            cboStatus.Items.Add("3 Esperando a");
+            cboStatus.Items.Add("4 Diferido");
+            cboStatus.SelectedIndex = 0;
 
             #region ? Listar Categorias
             //Outlook.Categories categories = Globals.ThisAddIn.Application.Session.Categories;
@@ -129,7 +137,7 @@ namespace fncGTD4Outlook
 
             try
             {
-                mails = Utils.getMailItems();
+                mails = Utils.GetMailItems();
 
                 if (mails != null && mails.Count > 0)
                 {

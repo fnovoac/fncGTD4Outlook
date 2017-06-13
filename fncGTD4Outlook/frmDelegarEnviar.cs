@@ -43,7 +43,7 @@ namespace fncGTD4Outlook
             cboPlazo.SelectedIndex = 0;
 
 
-            email = Utils.getMailItem();
+            email = Utils.GetMailItem();
 
             if (email != null)
             {
@@ -54,7 +54,7 @@ namespace fncGTD4Outlook
 
             //configuramos la opción de autocompletado del textbox
             List<Outlook.ContactItem> contactos = new List<Outlook.ContactItem>();
-            contactos = Utils.getListOfContacts(false);
+            contactos = Utils.GetListOfContacts(false);
 
             AutoCompleteStringCollection stringCol = new AutoCompleteStringCollection();
             for (int i = 0; i < contactos.Count; i++)
@@ -66,6 +66,15 @@ namespace fncGTD4Outlook
             txtContacto.AutoCompleteCustomSource = stringCol;
             txtContacto.AutoCompleteSource = AutoCompleteSource.CustomSource;
             txtContacto.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+
+            //Completamos los status
+            cboStatus.Items.Add("0 No iniciado");
+            cboStatus.Items.Add("1 En proceso");
+            cboStatus.Items.Add("2 Completado");
+            cboStatus.Items.Add("3 Esperando a");
+            cboStatus.Items.Add("4 Diferido");
+            cboStatus.SelectedIndex = 0;
+
         }
 
         private void txtContacto_KeyDown(object sender, KeyEventArgs e)

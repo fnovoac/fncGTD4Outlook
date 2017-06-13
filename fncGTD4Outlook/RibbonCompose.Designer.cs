@@ -37,6 +37,7 @@
             this.tab1 = this.Factory.CreateRibbonTab();
             this.group1 = this.Factory.CreateRibbonGroup();
             this.btnDelegarEnviar = this.Factory.CreateRibbonButton();
+            this.btnCompletarEnviar = this.Factory.CreateRibbonButton();
             this.tab1.SuspendLayout();
             this.group1.SuspendLayout();
             this.SuspendLayout();
@@ -52,6 +53,7 @@
             // group1
             // 
             this.group1.Items.Add(this.btnDelegarEnviar);
+            this.group1.Items.Add(this.btnCompletarEnviar);
             this.group1.Label = "fncGTD4Outlook";
             this.group1.Name = "group1";
             // 
@@ -63,6 +65,15 @@
             this.btnDelegarEnviar.OfficeImageId = "DirectRepliesTo";
             this.btnDelegarEnviar.ShowImage = true;
             this.btnDelegarEnviar.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnDelegarEnviar_Click);
+            // 
+            // btnCompletarEnviar
+            // 
+            this.btnCompletarEnviar.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
+            this.btnCompletarEnviar.Label = "Completar y Enviar";
+            this.btnCompletarEnviar.Name = "btnCompletarEnviar";
+            this.btnCompletarEnviar.OfficeImageId = "SendStatusReport";
+            this.btnCompletarEnviar.ShowImage = true;
+            this.btnCompletarEnviar.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnCompletarEnviar_Click);
             // 
             // RibbonCompose
             // 
@@ -83,6 +94,7 @@
         internal Microsoft.Office.Tools.Ribbon.RibbonTab tab1;
         internal Microsoft.Office.Tools.Ribbon.RibbonGroup group1;
         internal Microsoft.Office.Tools.Ribbon.RibbonButton btnDelegarEnviar;
+        internal Microsoft.Office.Tools.Ribbon.RibbonButton btnCompletarEnviar;
     }
 
     partial class ThisRibbonCollection

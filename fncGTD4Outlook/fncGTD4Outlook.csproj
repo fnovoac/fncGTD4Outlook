@@ -203,6 +203,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="regionConversationItems.resx">
+      <DependentUpon>regionConversationItems.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="RibbonAppointment.resx">
       <DependentUpon>RibbonAppointment.cs</DependentUpon>
     </EmbeddedResource>
@@ -224,6 +227,12 @@
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="regionConversationItems.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="regionConversationItems.Designer.cs">
+      <DependentUpon>regionConversationItems.cs</DependentUpon>
     </Compile>
     <Compile Include="RibbonAppointment.cs">
       <SubType>Component</SubType>

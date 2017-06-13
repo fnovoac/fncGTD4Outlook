@@ -214,7 +214,29 @@ namespace fncGTD4Outlook
 
             this.Application.NewMailEx += Application_NewMailEx;
 
+            this.Application.Inspectors.NewInspector += Inspectors_NewInspector;
 
+        }
+
+        private void Inspectors_NewInspector(Outlook.Inspector Inspector)
+        {
+        //    Outlook.MailItem email = null;
+
+        //    if (Inspector.CurrentItem is Outlook.MailItem)
+        //    {
+        //        email = Inspector.CurrentItem;
+
+        //        if (!email.Sent)
+        //        {
+        //            Globals.Ribbons.RibbonCompose.btnCompletarEnviar.Enabled = false;
+        //        }
+        //        else
+        //        {
+        //            Globals.Ribbons.RibbonCompose.btnCompletarEnviar.Enabled = true;
+        //        }
+        //    }
+
+        //    if (email != null) Marshal.ReleaseComObject(email);
         }
 
         private void Application_NewMailEx(string EntryIDCollection)

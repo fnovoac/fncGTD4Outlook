@@ -61,7 +61,7 @@ namespace fncGTD4Outlook.Comun
                         //    exSheet.get_Range("A4", missing).Value2 = exSheet.get_Range("A4", missing).Value2 + "A";
                         //}
 
-                        if (Functions.IsKeyDown(Keys.ControlKey) && keyData == Keys.Enter && KeyWasAlreadyPressed == false)
+                        if (Functions.IsKeyDown(Keys.ControlKey) && Functions.IsKeyDown(Keys.ShiftKey) &&  keyData == Keys.Enter && KeyWasAlreadyPressed == false)
                         {
                             Utils.MostrarDelegarForm();
                         }
